@@ -20,15 +20,6 @@ const itemSchema = new mongoose.Schema({  //define schema
 
 const Item = mongoose.model("Item", itemSchema); //create model
 
-const item1 = new Item({ //create new item
-  name: "Do homework"
-});
-
-const item2 = new Item({
-  name: "Play Fifa"
-});
-
-const defaultItem = [item1, item2];
 
 const listSchema = new mongoose.Schema({
   name: String,
@@ -42,21 +33,10 @@ const List = new mongoose.model("List", listSchema);
 app.get("/", function(req, res) {
 
   Item.find({},function (err, items) { //return a array item back (find all)
-    if (items.length === 0) {
-      Item.insertMany(defaultItem, function (err) { // insert items into database
-        if (err) { 
-          console.log(err);
-        } else {
-          console.log("inserted successfully");
-        }
-      });
-      res.redirect("/");
-    } else {
+ 
        res.render("list", {listTitle: "Today", newListItems: items});
-    }
+    
 })
-
-  //res.render("list", {listTitle: "Today", newListItems: items});
 
 });
 
@@ -69,8 +49,7 @@ app.get("/:customListName", function (req, res) {
        
         //create a new list
         const newList = new List({
-          name: customListName,
-          items: defaultItem
+          name: customListName
         });
       
         newList.save();
